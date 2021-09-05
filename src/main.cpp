@@ -1,10 +1,8 @@
-#include <permissions.h>
-#include <ptype.h>
-#include <stdio.h>
-#include <style.h>
-
 #include <filesystem>
 #include <iostream>
+#include <permissions.hpp>
+#include <ptype.hpp>
+#include <style.hpp>
 
 namespace fs = std::filesystem;
 

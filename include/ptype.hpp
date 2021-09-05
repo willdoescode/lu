@@ -2,7 +2,7 @@
 
 #include <filesystem>
 
-#include "style.h"
+#include "style.hpp"
 
 namespace fs = std::filesystem;
 
