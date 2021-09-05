@@ -42,7 +42,7 @@ int main(const int argc, char* argv[]) {
     validate_dir_path(argv[i]);
     if (fs::is_directory(argv[i])) {
       handle_multiple_entries(argv[i]);
-      return 0;
+      continue;
     }
 
     handle_indivisual_entry(fs::directory_entry{argv[i]});
