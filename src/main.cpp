@@ -33,11 +33,6 @@ void handle_multiple_entries(T p) {
 }
 
 int main(const int argc, char* argv[]) {
-  const char* dir = (argc <= 1 ? (char*)"." : argv[1]);
-  dir = validate_dir_path(dir);
-
-  std::cout << dir << std::endl;
-
   if (argc <= 1) {
     handle_multiple_entries(".");
     return 0;
