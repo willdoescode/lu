@@ -7,5 +7,5 @@ cmake -S . -B build
 
 cmake --build build
 
-./build/lu_test && ./build/lu
+./build/lu
 ```
