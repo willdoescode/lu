@@ -35,18 +35,19 @@ void handle_multiple_entries(T p) {
 int main(const int argc, char* argv[]) {
   if (argc <= 1) {
     handle_multiple_entries(".");
-    return 0;
+    return EXIT_SUCCESS;
   }
 
   for (int i = 1; i < argc; ++i) {
-    validate_dir_path(argv[i]);
-    if (fs::is_directory(argv[i])) {
-      handle_multiple_entries(argv[i]);
+    auto p = argv[i];
+    validate_dir_path(p);
+    if (fs::is_directory(p)) {
+      handle_multiple_entries(p);
       continue;
     }
 
-    handle_indivisual_entry(fs::directory_entry{argv[i]});
+    handle_indivisual_entry(fs::directory_entry{p});
   }
 
-  return 0;
+  return EXIT_SUCCESS;
 }
