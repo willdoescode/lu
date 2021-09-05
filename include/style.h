@@ -1,15 +1,15 @@
 #pragma once
 
-namespace style {
+inline namespace style {
 const char* end{"\033[0;0m"};
-namespace effects {
+inline namespace effects {
 const char* bold{"\033[1m"};
 const char* dull{"\033[2m"};
 const char* italic{"\033[3m"};
 const char* underline{"\033[4m"};
 const char* inverted{"\033[7m"};
 }  // namespace effects
-namespace bg {
+inline namespace bg {
 const char* dark_black{"\033[40m"};
 const char* dark_red{"\033[41m"};
 const char* dark_green{"\033[42m"};
@@ -27,7 +27,7 @@ const char* light_magenta{"\033[105m"};
 const char* light_cyan{"\033[106m"};
 const char* light_white{"\033[107m"};
 }  // namespace bg
-namespace fg {
+inline namespace fg {
 const char* dark_black{"\033[30m"};
 const char* dark_red{"\033[31m"};
 const char* dark_green{"\033[32m"};
