@@ -1,5 +1,9 @@
 #pragma once
 
+#include <grp.h>
+#include <pwd.h>
+#include <sys/stat.h>
+
 #include <filesystem>
 
 #include "style.hpp"
@@ -12,11 +16,31 @@ struct PType {
   const char* color;
   const char* filename;
   const char* filepath;
+  struct stat fileinfo;
+  struct passwd* pw;
+  struct group* gr;
 
  public:
-  PType(const fs::directory_entry& entry) {
-    this->filename = entry.path().filename().c_str();
-    this->filename = entry.path().c_str();
+  inline bool operator<(const PType& ptype) {
+    return this->filepath < ptype.get_filepath();
+  }
+
+  inline const char* get_color() const noexcept { return this->color; }
+  inline char get_leter() const noexcept { return this->letter; }
+  inline const char* get_filepath() const noexcept { return this->filepath; }
+  inline const struct stat get_fileinfo() const noexcept {
+    return this->fileinfo;
+  }
+  inline const struct passwd* get_filepw() const noexcept { return this->pw; }
+  inline const struct group* get_filegr() const noexcept { return this->gr; }
+
+  PType(const fs::directory_entry& entry)
+      : filename(entry.path().filename().c_str()),
+        filepath(entry.path().c_str()) {
+    stat(this->filepath, &this->fileinfo);
+    this->pw = getpwuid(this->fileinfo.st_uid);
+    this->gr = getgrgid(this->fileinfo.st_gid);
+
     switch (entry.status().type()) {
       case fs::file_type::regular:
         this->color = style::fg::light_white;
@@ -56,12 +80,4 @@ struct PType {
         break;
     }
   };
-
-  inline bool operator<(const PType& ptype) {
-    return this->filepath < ptype.get_filepath();
-  }
-
-  inline const char* get_color() const noexcept { return this->color; }
-  inline char get_leter() const noexcept { return this->letter; }
-  inline const char* get_filepath() const noexcept { return this->filepath; }
 };

@@ -20,7 +20,9 @@ inline void handle_indivisual_entry(T entry) {
   auto path = entry.path();
   std::cout << ptype.get_color() << ptype.get_leter()
             << get_permission_color_str(fs::status(path.c_str()).permissions())
-            << " " << ptype.get_color() << path.filename().c_str() << std::endl;
+            << " " << ptype.get_filegr()->gr_name << " "
+            << ptype.get_filepw()->pw_name << " " << ptype.get_color()
+            << path.filename().c_str() << std::endl;
 }
 
 template <class T>
