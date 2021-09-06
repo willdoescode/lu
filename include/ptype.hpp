@@ -10,56 +10,56 @@ struct PType {
  private:
   const char* color;
   char letter;
+  const char* filename;
+  const char* filepath;
 
  public:
   PType(const fs::directory_entry& entry) {
-    if (entry.is_regular_file()) {
-      this->color = style::fg::light_white;
-      this->letter = '.';
-      return;
-    }
-    if (entry.is_directory()) {
-      this->color = style::fg::light_blue;
-      this->letter = 'd';
-      return;
-    }
-
-    if (entry.is_symlink()) {
-      this->color = style::fg::light_magenta;
-      this->letter = 'l';
-      return;
-    }
-
-    if (entry.is_block_file()) {
-      this->color = style::fg::light_green;
-      this->letter = 'b';
-      return;
-    }
-
-    if (entry.is_socket()) {
-      this->color = style::fg::light_red;
-      this->letter = 's';
-      return;
-    }
-
-    if (entry.is_character_file()) {
-      this->color = style::fg::light_yellow;
-      this->letter = 'c';
-      return;
-    }
-
-    if (entry.is_fifo()) {
-      this->color = style::fg::light_yellow;
-      this->letter = '|';
-      return;
-    }
-
-    if (entry.is_other()) {
-      this->color = style::fg::light_white;
-      this->letter = '.';
+    switch (entry.status().type()) {
+      case fs::file_type::regular:
+        this->color = style::fg::light_white;
+        this->letter = '.';
+        break;
+      case fs::file_type::directory:
+        this->color = style::fg::light_blue;
+        this->letter = 'd';
+        break;
+      case fs::file_type::symlink:
+        this->color = style::fg::light_magenta;
+        this->letter = 'l';
+        break;
+      case fs::file_type::block:
+        this->color = style::fg::light_green;
+        this->letter = 'b';
+        break;
+      case fs::file_type::character:
+        this->color = style::fg::light_yellow;
+        this->letter = 'c';
+        break;
+      case fs::file_type::fifo:
+        this->color = style::fg::light_yellow;
+        this->letter = '|';
+        break;
+      case fs::file_type::socket:
+        this->color = style::fg::light_red;
+        this->letter = 's';
+        break;
+      case fs::file_type::unknown:
+        this->color = style::fg::light_white;
+        this->letter = '.';
+        break;
+      default:
+        this->color = style::fg::light_white;
+        this->letter = '.';
+        break;
     }
   };
 
-  inline const char* get_color() { return this->color; }
-  inline char get_leter() { return this->letter; }
+  bool operator<(const PType& ptype) {
+    return this->filepath < ptype.get_filepath();
+  }
+
+  inline const char* get_color() const noexcept { return this->color; }
+  inline char get_leter() const noexcept { return this->letter; }
+  inline const char* get_filepath() const noexcept { return this->filepath; }
 };

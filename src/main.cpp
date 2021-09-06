@@ -7,13 +7,11 @@
 namespace fs = std::filesystem;
 
 template <class T>
-inline T validate_dir_path(T dir) {
+inline void validate_dir_path(T dir) {
   if (!fs::exists(dir)) {
     std::cout << "Error: \"" << dir << "\" does not exist." << std::endl;
     exit(EXIT_FAILURE);
   }
-
-  return dir;
 }
 
 template <class T>
@@ -38,7 +36,7 @@ int main(const int argc, char* argv[]) {
     return EXIT_SUCCESS;
   }
 
-  for (int i = 1; i < argc; ++i) {
+  for (size_t i = 1; i < argc; ++i) {
     auto p = argv[i];
     validate_dir_path(p);
     if (fs::is_directory(p)) {
