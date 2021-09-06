@@ -15,7 +15,7 @@ inline void validate_dir_path(T dir) {
 }
 
 template <class T>
-void handle_indivisual_entry(T entry) {
+inline void handle_indivisual_entry(T entry) {
   PType ptype{entry};
   auto path = entry.path();
   std::cout << ptype.get_color() << ptype.get_leter()
@@ -24,7 +24,7 @@ void handle_indivisual_entry(T entry) {
 }
 
 template <class T>
-void handle_multiple_entries(T p) {
+inline void handle_multiple_entries(T p) {
   for (const fs::directory_entry& entry : fs::directory_iterator(p)) {
     handle_indivisual_entry(entry);
   }

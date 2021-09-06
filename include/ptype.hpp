@@ -8,13 +8,15 @@ namespace fs = std::filesystem;
 
 struct PType {
  private:
-  const char* color;
   char letter;
+  const char* color;
   const char* filename;
   const char* filepath;
 
  public:
   PType(const fs::directory_entry& entry) {
+    this->filename = entry.path().filename().c_str();
+    this->filename = entry.path().c_str();
     switch (entry.status().type()) {
       case fs::file_type::regular:
         this->color = style::fg::light_white;
@@ -55,7 +57,7 @@ struct PType {
     }
   };
 
-  bool operator<(const PType& ptype) {
+  inline bool operator<(const PType& ptype) {
     return this->filepath < ptype.get_filepath();
   }
 
