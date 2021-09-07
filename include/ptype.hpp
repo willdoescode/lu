@@ -3,8 +3,11 @@
 #include <grp.h>
 #include <pwd.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 
 #include <filesystem>
+#include <sstream>
+#include <string>
 
 #include "style.hpp"
 
@@ -12,6 +15,7 @@ namespace fs = std::filesystem;
 
 struct PType {
  private:
+  std::string modified_time;
   char letter;
   const char* color;
   const char* filename;
@@ -33,6 +37,9 @@ struct PType {
   }
   inline const struct passwd* get_filepw() const noexcept { return this->pw; }
   inline const struct group* get_filegr() const noexcept { return this->gr; }
+  inline const std::string& get_modified_time() const noexcept {
+    return this->modified_time;
+  }
 
   PType(const fs::directory_entry& entry)
       : filename(entry.path().filename().c_str()),
@@ -41,9 +48,20 @@ struct PType {
     this->pw = getpwuid(this->fileinfo.st_uid);
     this->gr = getgrgid(this->fileinfo.st_gid);
 
+    try {
+      std::time_t tt = decltype(entry.last_write_time())::clock::to_time_t(
+          entry.last_write_time());
+      std::tm* gmt = std::gmtime(&tt);
+      std::stringstream buffer;
+      buffer << std::put_time(gmt, "%A, %d %B %Y %H:%M");
+      this->modified_time = buffer.str();
+    } catch (fs::filesystem_error& e) {
+      this->modified_time = "0 0 0 00 0 ";
+    }
+
     switch (entry.status().type()) {
       case fs::file_type::regular:
-        this->color = style::fg::light_white;
+        this->color = style::end;
         this->letter = '.';
         break;
       case fs::file_type::directory:
@@ -71,11 +89,11 @@ struct PType {
         this->letter = 's';
         break;
       case fs::file_type::unknown:
-        this->color = style::fg::light_white;
+        this->color = style::end;
         this->letter = '.';
         break;
       default:
-        this->color = style::fg::light_white;
+        this->color = style::end;
         this->letter = '.';
         break;
     }
