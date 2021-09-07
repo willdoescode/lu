@@ -58,7 +58,7 @@ struct PType {
           entry.last_write_time());
       std::tm* gmt = std::gmtime(&tt);
       std::stringstream buffer;
-      buffer << std::put_time(gmt, "%A, %d %B %Y %H:%M");
+      buffer << std::put_time(gmt, "%d %b %H:%M %y");
       this->modified_time = buffer.str();
     } catch (fs::filesystem_error& e) {
       this->modified_time = " ";

@@ -20,17 +20,22 @@ inline void validate_dir_path(T dir) {
 template <class T>
 inline void handle_indivisual_entry(T ptype, int longest_group,
                                     int longest_owner, int longest_date) {
-  std::cout
-      << ptype.get_color() << ptype.get_leter()
-      << get_permission_color_str(
-             fs::status(ptype.get_filepath()).permissions())
-      << " " << style::fg::dark_yellow << ptype.get_filegr()->gr_name
-      << std::string((longest_group - strlen(ptype.get_filegr()->gr_name)), ' ')
-      << " " << ptype.get_filepw()->pw_name
-      << std::string((longest_owner - strlen(ptype.get_filepw()->pw_name)), ' ')
-      << style::fg::light_blue << " " << ptype.get_modified_time()
-      << std::string((longest_date - ptype.get_modified_time().length()), ' ')
-      << ptype.get_color() << " " << ptype.get_filename() << std::endl;
+  try {
+    std::cout << ptype.get_color() << ptype.get_leter()
+              << get_permission_color_str(
+                     fs::status(ptype.get_filepath()).permissions())
+              << " " << style::fg::dark_yellow << ptype.get_filegr()->gr_name
+              << std::string(
+                     (longest_group - strlen(ptype.get_filegr()->gr_name)), ' ')
+              << " " << ptype.get_filepw()->pw_name
+              << std::string(
+                     (longest_owner - strlen(ptype.get_filepw()->pw_name)), ' ')
+              << style::fg::light_blue << " " << ptype.get_modified_time()
+              << std::string(
+                     (longest_date - ptype.get_modified_time().length()), ' ')
+              << ptype.get_color() << " " << ptype.get_filename() << std::endl;
+  } catch (const std::length_error& e) {
+  }
 }
 
 template <class T>
