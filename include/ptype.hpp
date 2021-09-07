@@ -61,7 +61,7 @@ struct PType {
       buffer << std::put_time(gmt, "%A, %d %B %Y %H:%M");
       this->modified_time = buffer.str();
     } catch (fs::filesystem_error& e) {
-      this->modified_time = "0 0 0 00 0 ";
+      this->modified_time = " ";
     }
 
     switch (entry.status().type()) {
