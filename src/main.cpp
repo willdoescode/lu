@@ -70,7 +70,6 @@ int main(const int argc, char* argv[]) {
   for (int i = 1; i < argc; ++i) {
     validate_dir_path(argv[i]);
     if (fs::is_directory(argv[i])) {
-      // std::cout << argv[i] << std::endl;
       handle_multiple_entries(argv[i]);
       continue;
     }

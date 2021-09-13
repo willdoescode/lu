@@ -47,8 +47,7 @@ struct PType {
   }
 
   PType(const fs::directory_entry& entry)
-      : filename(entry.path().filename().string()),
-        filepath(entry.path().string()) {
+      : filename(entry.path().filename()), filepath(entry.path()) {
     stat(this->filepath.c_str(), &this->fileinfo);
     this->pw = getpwuid(this->fileinfo.st_uid);
     this->gr = getgrgid(this->fileinfo.st_gid);
@@ -61,7 +60,7 @@ struct PType {
       buffer << std::put_time(gmt, "%d %b %H:%M %y");
       this->modified_time = buffer.str();
     } catch (fs::filesystem_error& e) {
-      this->modified_time = " ";
+      this->modified_time = "";
     }
 
     switch (entry.status().type()) {
