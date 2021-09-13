@@ -68,7 +68,10 @@ int main(const int argc, char* argv[]) {
       continue;
     }
 
-    handle_indivisual_entry(PType{fs::directory_entry{argv[i]}}, 0, 0, 0);
+    PType single_entry{fs::directory_entry{argv[i]}};
+    handle_indivisual_entry(single_entry, single_entry.get_filegr().length(),
+                            single_entry.get_filepw().length(),
+                            single_entry.get_modified_time().length());
   }
 
   return EXIT_SUCCESS;
