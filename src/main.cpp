@@ -24,8 +24,7 @@ inline void handle_indivisual_entry(T ptype, int longest_group,
       << ptype.get_color() << ptype.get_leter()
       << get_permission_color_str(
              fs::status(ptype.get_filepath()).permissions())
-      << " "
-      << style::fg::dark_yellow << ptype.get_filegr()->gr_name
+      << " " << style::fg::dark_yellow << ptype.get_filegr()->gr_name
       << std::string((longest_group - strlen(ptype.get_filegr()->gr_name)), ' ')
       << " " << ptype.get_filepw()->pw_name
       << std::string((longest_owner - strlen(ptype.get_filepw()->pw_name)), ' ')
@@ -58,8 +57,8 @@ inline void handle_multiple_entries(T p) {
 
 int main(const int argc, char* argv[]) {
   if (argc <= 1) {
-    validate_dir_path(".");
     handle_multiple_entries(".");
+    return EXIT_SUCCESS;
   }
 
   for (int i = 1; i < argc; ++i) {
