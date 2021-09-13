@@ -35,13 +35,15 @@ inline void handle_indivisual_entry(T ptype, int longest_group,
                      (longest_date - ptype.get_modified_time().length()), ' ')
               << ptype.get_color() << " " << ptype.get_filename() << std::endl;
   } catch (const std::length_error& e) {
+    std::cout << e.what() << std::endl;
   }
 }
 
 template <class T>
 inline void handle_multiple_entries(T p) {
-  int longest_date, longest_modified_str, longest_group, longest_owner = 0;
-  std::vector<PType> entry_ptypes;
+  int longest_date = 0, longest_modified_str = 0, longest_group = 0,
+      longest_owner = 0;
+  std::vector<PType> entry_ptypes{};
   for (const fs::directory_entry& entry : fs::directory_iterator(p)) {
     PType ptype{entry};
     if (strlen(ptype.get_filepw()->pw_name) > longest_owner)
@@ -61,13 +63,14 @@ inline void handle_multiple_entries(T p) {
 
 int main(const int argc, char* argv[]) {
   if (argc <= 1) {
+    validate_dir_path(".");
     handle_multiple_entries(".");
-    return EXIT_SUCCESS;
   }
 
-  for (size_t i = 1; i < argc; ++i) {
+  for (int i = 1; i < argc; ++i) {
     validate_dir_path(argv[i]);
     if (fs::is_directory(argv[i])) {
+      // std::cout << argv[i] << std::endl;
       handle_multiple_entries(argv[i]);
       continue;
     }
