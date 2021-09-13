@@ -21,8 +21,8 @@ struct PType {
   std::string filename;
   std::string filepath;
   struct stat fileinfo;
-  struct passwd* pw;
-  struct group* gr;
+  std::string pw;
+  std::string gr;
 
  public:
   inline bool operator<(const PType& ptype) {
@@ -40,8 +40,8 @@ struct PType {
   inline const struct stat get_fileinfo() const noexcept {
     return this->fileinfo;
   }
-  inline const struct passwd* get_filepw() const noexcept { return this->pw; }
-  inline const struct group* get_filegr() const noexcept { return this->gr; }
+  inline const std::string& get_filepw() const noexcept { return this->pw; }
+  inline const std::string& get_filegr() const noexcept { return this->gr; }
   inline const std::string& get_modified_time() const noexcept {
     return this->modified_time;
   }
@@ -49,8 +49,8 @@ struct PType {
   PType(const fs::directory_entry& entry)
       : filename(entry.path().filename()), filepath(entry.path()) {
     stat(this->filepath.c_str(), &this->fileinfo);
-    this->pw = getpwuid(this->fileinfo.st_uid);
-    this->gr = getgrgid(this->fileinfo.st_gid);
+    this->pw = std::string{getpwuid(this->fileinfo.st_uid)->pw_name};
+    this->gr = std::string{getgrgid(this->fileinfo.st_gid)->gr_name};
 
     try {
       std::time_t tt = decltype(entry.last_write_time())::clock::to_time_t(

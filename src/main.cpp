@@ -20,17 +20,17 @@ inline void validate_dir_path(T dir) {
 template <class T>
 inline void handle_indivisual_entry(T ptype, int longest_group,
                                     int longest_owner, int longest_date) {
-  std::cout
-      << ptype.get_color() << ptype.get_leter()
-      << get_permission_color_str(
-             fs::status(ptype.get_filepath()).permissions())
-      << " " << style::fg::dark_yellow << ptype.get_filegr()->gr_name
-      << std::string((longest_group - strlen(ptype.get_filegr()->gr_name)), ' ')
-      << " " << ptype.get_filepw()->pw_name
-      << std::string((longest_owner - strlen(ptype.get_filepw()->pw_name)), ' ')
-      << style::fg::light_blue << " " << ptype.get_modified_time()
-      << std::string((longest_date - ptype.get_modified_time().length()), ' ')
-      << ptype.get_color() << " " << ptype.get_filename() << std::endl;
+  std::cout << ptype.get_color() << ptype.get_leter()
+            << get_permission_color_str(
+                   fs::status(ptype.get_filepath()).permissions())
+            << " " << style::fg::dark_yellow << ptype.get_filegr()
+            << std::string((longest_group - ptype.get_filegr().length()), ' ')
+            << " " << ptype.get_filepw()
+            << std::string((longest_owner - ptype.get_filepw().length()), ' ')
+            << style::fg::light_blue << " " << ptype.get_modified_time()
+            << std::string((longest_date - ptype.get_modified_time().length()),
+                           ' ')
+            << ptype.get_color() << " " << ptype.get_filename() << std::endl;
 }
 
 template <class T>
@@ -40,10 +40,10 @@ inline void handle_multiple_entries(T p) {
   std::vector<PType> entry_ptypes{};
   for (const fs::directory_entry& entry : fs::directory_iterator(p)) {
     PType ptype{entry};
-    if (strlen(ptype.get_filepw()->pw_name) > longest_owner)
-      longest_owner = strlen(ptype.get_filepw()->pw_name) + 1;
-    if (strlen(ptype.get_filegr()->gr_name) > longest_group)
-      longest_group = strlen(ptype.get_filegr()->gr_name);
+    if (ptype.get_filepw().length() > longest_owner)
+      longest_owner = ptype.get_filepw().length() + 1;
+    if (ptype.get_filegr().length() > longest_group)
+      longest_group = ptype.get_filegr().length();
     if (ptype.get_modified_time().length() > longest_date)
       longest_date = ptype.get_modified_time().length();
 
