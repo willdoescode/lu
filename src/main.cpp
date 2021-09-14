@@ -55,7 +55,7 @@ inline void handle_multiple_entries(const T& p) {
     entry_ptypes.push_back(ptype);
   }
 
-  for (auto p : entry_ptypes) {
+  for (const PType& p : entry_ptypes) {
     handle_indivisual_entry(p, longest_group, longest_owner, longest_date);
   }
 }
