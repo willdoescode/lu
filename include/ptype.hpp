@@ -25,28 +25,45 @@ struct PType {
   std::string gr;
 
  public:
-  inline bool operator<(const PType& ptype) {
+  inline bool 
+	operator<(const PType& ptype) {
     return this->filepath < ptype.get_filepath();
   }
 
-  inline const std::string& get_color() const noexcept { return this->color; }
-  inline char get_leter() const noexcept { return this->letter; }
-  inline const std::string& get_filepath() const noexcept {
+  inline const 
+	std::string& get_color() const noexcept { return this->color; }
+
+  inline char 
+	get_leter() const noexcept { return this->letter; }
+
+  inline const std::string& 
+	get_filepath() const noexcept {
     return this->filepath;
   }
-  inline const std::string& get_filename() const noexcept {
+
+  inline const std::string& 
+	get_filename() const noexcept {
     return this->filename;
   }
-  inline const struct stat get_fileinfo() const noexcept {
+
+  inline const struct stat 
+	get_fileinfo() const noexcept {
     return this->fileinfo;
   }
-  inline const std::string& get_filepw() const noexcept { return this->pw; }
-  inline const std::string& get_filegr() const noexcept { return this->gr; }
-  inline const std::string& get_modified_time() const noexcept {
+
+  inline const std::string& 
+	get_filepw() const noexcept { return this->pw; }
+
+  inline const std::string& 
+	get_filegr() const noexcept { return this->gr; }
+
+  inline const std::string& 
+	get_modified_time() const noexcept {
     return this->modified_time;
   }
 
-  PType(const fs::directory_entry& entry)
+  PType
+	(const fs::directory_entry& entry)
       : filename(entry.path().filename()), filepath(entry.path()) {
     stat(this->filepath.c_str(), &this->fileinfo);
     this->pw = std::string{getpwuid(this->fileinfo.st_uid)->pw_name};

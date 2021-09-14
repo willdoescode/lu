@@ -7,7 +7,8 @@
 
 namespace fs = std::filesystem;
 
-inline const std::string get_permission_color_str(const fs::perms p) {
+inline const std::string 
+get_permission_color_str(const fs::perms p) {
   using namespace std::string_literals;
   std::string bar{style::fg::light_black + "-"s};
 
