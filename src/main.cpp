@@ -1,3 +1,4 @@
+#include <concepts>
 #include <filesystem>
 #include <iostream>
 #include <optional>
@@ -9,7 +10,11 @@
 
 namespace fs = std::filesystem;
 
-template <class T>
+template <typename T>
+concept IntoPath = std::is_convertible<T, fs::path>::value;
+
+template <typename T>
+requires IntoPath<T>
 inline void validate_dir_path(T dir) {
   if (!fs::exists(dir)) {
     std::cout << "Error: \"" << dir << "\" does not exist." << std::endl;
@@ -17,8 +22,7 @@ inline void validate_dir_path(T dir) {
   }
 }
 
-template <class T>
-inline void handle_indivisual_entry(T ptype, int longest_group,
+inline void handle_indivisual_entry(PType ptype, int longest_group,
                                     int longest_owner, int longest_date) {
   std::cout << ptype.get_color() << ptype.get_leter()
             << get_permission_color_str(
@@ -34,6 +38,7 @@ inline void handle_indivisual_entry(T ptype, int longest_group,
 }
 
 template <class T>
+requires IntoPath<T>
 inline void handle_multiple_entries(T p) {
   int longest_date = 0, longest_modified_str = 0, longest_group = 0,
       longest_owner = 0;
