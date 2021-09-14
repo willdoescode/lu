@@ -16,21 +16,15 @@ concept IntoPath = std::is_convertible<T, fs::path>::value;
 
 template <typename T>
 requires IntoPath<T>
-inline void
-validate_dir_path(const T& dir) {
+inline void validate_dir_path(const T& dir) {
   if (!fs::exists(dir)) {
     std::cout << "Error: \"" << dir << "\" does not exist." << std::endl;
     exit(EXIT_FAILURE);
   }
 }
 
-inline void
-handle_indivisual_entry(
-		PType ptype,
-		int longest_group,
-		int longest_owner,
-		int longest_date) 
-{
+inline void handle_indivisual_entry(PType ptype, int longest_group,
+                                    int longest_owner, int longest_date) {
   std::cout << ptype.get_color() << ptype.get_leter()
             << get_permission_color_str(
                    fs::status(ptype.get_filepath()).permissions())
@@ -44,27 +38,27 @@ handle_indivisual_entry(
             << ptype.get_color() << " " << ptype.get_filename() << std::endl;
 }
 
-bool
-compare_files(PType f1, PType f2) {
-	std::cout << f1.get_dir() << std::endl;
-	std::cout << f2.get_dir() << std::endl;
+bool compare_files(PType f1, PType f2) {
+  std::cout << f1.get_dir() << std::endl;
+  std::cout << f2.get_dir() << std::endl;
 
-	if (f1.get_dir() && !f2.get_dir()) return true;
-	else if (!f1.get_dir() && f2.get_dir()) return false;
-	else {
-		return f1.get_filepath() < f2.get_filepath();
-	}
+  if (f1.get_dir() && !f2.get_dir())
+    return true;
+  else if (!f1.get_dir() && f2.get_dir())
+    return false;
+  else {
+    return f1.get_filepath() < f2.get_filepath();
+  }
 }
 
 template <typename T>
 requires IntoPath<T>
-inline void
-handle_multiple_entries(const T& p) {
+inline void handle_multiple_entries(const T& p) {
   int longest_date = 0, longest_modified_str = 0, longest_group = 0,
       longest_owner = 0;
   std::vector<PType> entry_ptypes{};
   for (const fs::directory_entry& entry : fs::directory_iterator(p)) {
-    PType path (entry);
+    PType path(entry);
 
     if (path.get_filepw().length() > longest_owner)
       longest_owner = path.get_filepw().length() + 1;
@@ -76,15 +70,14 @@ handle_multiple_entries(const T& p) {
     entry_ptypes.push_back(path);
   }
 
-	std::sort(entry_ptypes.begin(), entry_ptypes.end(), compare_files);
+  std::sort(entry_ptypes.begin(), entry_ptypes.end(), compare_files);
 
   for (const PType& p : entry_ptypes) {
     handle_indivisual_entry(p, longest_group, longest_owner, longest_date);
   }
 }
 
-int
-main(const int argc, char* argv[]) {
+int main(const int argc, char* argv[]) {
   if (argc <= 1) {
     handle_multiple_entries(".");
     return EXIT_SUCCESS;
@@ -99,12 +92,9 @@ main(const int argc, char* argv[]) {
 
     PType single_entry{fs::directory_entry{argv[i]}};
 
-    handle_indivisual_entry(
-				single_entry,
-				single_entry.get_filegr().length(),
-				single_entry.get_filepw().length(),
-				single_entry.get_modified_time().length()
-		);
+    handle_indivisual_entry(single_entry, single_entry.get_filegr().length(),
+                            single_entry.get_filepw().length(),
+                            single_entry.get_modified_time().length());
   }
 
   return EXIT_SUCCESS;
