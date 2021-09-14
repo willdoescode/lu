@@ -15,7 +15,7 @@ concept IntoPath = std::is_convertible<T, fs::path>::value;
 
 template <typename T>
 requires IntoPath<T>
-inline void validate_dir_path(T dir) {
+inline void validate_dir_path(const T& dir) {
   if (!fs::exists(dir)) {
     std::cout << "Error: \"" << dir << "\" does not exist." << std::endl;
     exit(EXIT_FAILURE);
@@ -39,7 +39,7 @@ inline void handle_indivisual_entry(PType ptype, int longest_group,
 
 template <class T>
 requires IntoPath<T>
-inline void handle_multiple_entries(T p) {
+inline void handle_multiple_entries(const T& p) {
   int longest_date = 0, longest_modified_str = 0, longest_group = 0,
       longest_owner = 0;
   std::vector<PType> entry_ptypes{};
