@@ -39,9 +39,6 @@ inline void handle_indivisual_entry(PType ptype, int longest_group,
 }
 
 bool compare_files(PType f1, PType f2) {
-  std::cout << f1.get_dir() << std::endl;
-  std::cout << f2.get_dir() << std::endl;
-
   if (f1.get_dir() && !f2.get_dir())
     return true;
   else if (!f1.get_dir() && f2.get_dir())
