@@ -23,6 +23,7 @@ struct PType {
   struct stat fileinfo;
   std::string pw;
   std::string gr;
+	bool is_dir;
 
  public:
   inline bool 
@@ -30,8 +31,11 @@ struct PType {
     return this->filepath < ptype.get_filepath();
   }
 
-  inline const 
-	std::string& get_color() const noexcept { return this->color; }
+	inline bool
+	get_dir() const noexcept { return this->is_dir; }
+
+  inline const std::string&
+	get_color() const noexcept { return this->color; }
 
   inline char 
 	get_leter() const noexcept { return this->letter; }
@@ -84,38 +88,47 @@ struct PType {
       case fs::file_type::regular:
         this->color = std::string{style::end};
         this->letter = '.';
+				this->is_dir = false;
         break;
       case fs::file_type::directory:
         this->color = std::string{style::fg::light_blue};
         this->letter = 'd';
+				this->is_dir = true;
         break;
       case fs::file_type::symlink:
         this->color = std::string{style::fg::light_magenta};
         this->letter = 'l';
+				this->is_dir = false;
         break;
       case fs::file_type::block:
         this->color = std::string{style::fg::light_green};
         this->letter = 'b';
+				this->is_dir = false;
         break;
       case fs::file_type::character:
         this->color = std::string{style::fg::light_yellow};
         this->letter = 'c';
+				this->is_dir = false;
         break;
       case fs::file_type::fifo:
         this->color = std::string{style::fg::light_yellow};
         this->letter = '|';
+				this->is_dir = false;
         break;
       case fs::file_type::socket:
         this->color = std::string{style::fg::light_red};
         this->letter = 's';
+				this->is_dir = false;
         break;
       case fs::file_type::unknown:
         this->color = std::string{style::end};
         this->letter = '.';
+				this->is_dir = false;
         break;
       default:
         this->color = std::string{style::end};
         this->letter = '.';
+				this->is_dir = false;
         break;
     }
   };

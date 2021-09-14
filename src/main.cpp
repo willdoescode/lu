@@ -6,6 +6,7 @@
 #include <ptype.hpp>
 #include <string>
 #include <style.hpp>
+#include <type_traits>
 #include <vector>
 
 namespace fs = std::filesystem;
@@ -43,6 +44,18 @@ handle_indivisual_entry(
             << ptype.get_color() << " " << ptype.get_filename() << std::endl;
 }
 
+bool
+compare_files(PType f1, PType f2) {
+	std::cout << f1.get_dir() << std::endl;
+	std::cout << f2.get_dir() << std::endl;
+
+	if (f1.get_dir() && !f2.get_dir()) return true;
+	else if (!f1.get_dir() && f2.get_dir()) return false;
+	else {
+		return f1.get_filepath() < f2.get_filepath();
+	}
+}
+
 template <typename T>
 requires IntoPath<T>
 inline void
@@ -62,6 +75,8 @@ handle_multiple_entries(const T& p) {
 
     entry_ptypes.push_back(path);
   }
+
+	std::sort(entry_ptypes.begin(), entry_ptypes.end(), compare_files);
 
   for (const PType& p : entry_ptypes) {
     handle_indivisual_entry(p, longest_group, longest_owner, longest_date);
