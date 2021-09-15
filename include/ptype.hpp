@@ -26,8 +26,14 @@ struct PType {
   bool is_dir;
 
  public:
-  inline bool operator<(const PType& ptype) {
-    return this->filepath < ptype.get_filepath();
+  inline bool operator<(const PType& f2) {
+    if (this->get_dir() && !f2.get_dir())
+      return true;
+    else if (!this->get_dir() && f2.get_dir())
+      return false;
+    else {
+      return this->get_filepath() < f2.get_filepath();
+    }
   }
 
   inline bool get_dir() const noexcept { return this->is_dir; }

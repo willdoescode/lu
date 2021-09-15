@@ -38,16 +38,6 @@ inline void handle_indivisual_entry(PType ptype, int longest_group,
             << ptype.get_color() << " " << ptype.get_filename() << std::endl;
 }
 
-bool compare_files(PType f1, PType f2) {
-  if (f1.get_dir() && !f2.get_dir())
-    return true;
-  else if (!f1.get_dir() && f2.get_dir())
-    return false;
-  else {
-    return f1.get_filepath() < f2.get_filepath();
-  }
-}
-
 template <typename T>
 requires IntoPath<T>
 inline void handle_multiple_entries(const T& p) {
@@ -67,7 +57,8 @@ inline void handle_multiple_entries(const T& p) {
     entry_ptypes.push_back(path);
   }
 
-  std::sort(entry_ptypes.begin(), entry_ptypes.end(), compare_files);
+  std::sort(entry_ptypes.begin(), entry_ptypes.end(),
+            [](auto f1, auto f2) { return f1 < f2; });
 
   for (const PType& p : entry_ptypes) {
     handle_indivisual_entry(p, longest_group, longest_owner, longest_date);
