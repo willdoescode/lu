@@ -13,6 +13,8 @@
 
 namespace fs = std::filesystem;
 
+std::string size_to_str(uintmax_t size);
+
 struct PType {
  private:
   std::string modified_time;
@@ -23,6 +25,7 @@ struct PType {
   struct stat fileinfo;
   std::string pw;
   std::string gr;
+  std::string size;
   bool is_dir;
 
  public:
@@ -37,6 +40,7 @@ struct PType {
   }
 
   inline bool get_dir() const noexcept { return this->is_dir; }
+  inline const std::string& get_size() const noexcept { return this->size; }
 
   inline const std::string& get_color() const noexcept { return this->color; }
 
@@ -126,5 +130,37 @@ struct PType {
         this->is_dir = false;
         break;
     }
+
+    if (!this->is_dir) {
+      try {
+        this->size = size_to_str(entry.file_size());
+      } catch (const fs::filesystem_error& _e) {
+        this->size = "-";
+      }
+      return;
+    }
+    this->size = "-";
   };
 };
+
+float round_size(float n) {
+  float d = n * 100.0;
+  int i = d + 0.5;
+  d = (float)i / 100.0;
+  return d;
+}
+
+std::string size_to_str(uintmax_t size) {
+  static const char* sizes[] = {"B", "KB", "MB", "GB"};
+  int div = 0;
+  size_t rem = 0;
+
+  while (size >= 1024 && div < 4) {
+    rem = (size % 1024);
+    div++;
+    size /= 1024;
+  }
+
+  float size_d = size + rem / 1024.;
+  return std::to_string((int)round_size(size_d)) + " " + sizes[div];
+}

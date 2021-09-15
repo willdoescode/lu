@@ -14,20 +14,25 @@ namespace fs = std::filesystem;
 template <typename T>
 concept IntoPath = std::is_convertible<T, fs::path>::value;
 
-template <typename T>
-requires IntoPath<T>
-inline void validate_dir_path(const T& dir) {
+template <typename Path>
+requires IntoPath<Path>
+inline void validate_dir_path(const Path& dir) {
   if (!fs::exists(dir)) {
     std::cout << "Error: \"" << dir << "\" does not exist." << std::endl;
     exit(EXIT_FAILURE);
   }
 }
 
-inline void handle_indivisual_entry(PType ptype, int longest_group,
-                                    int longest_owner, int longest_date) {
+inline void handle_indivisual_entry(PType ptype, int longest_size,
+                                    int longest_group, int longest_owner,
+                                    int longest_date) {
   std::cout << ptype.get_color() << ptype.get_leter()
             << get_permission_color_str(
                    fs::status(ptype.get_filepath()).permissions())
+            << (ptype.get_size() != "-" ? style::fg::light_green
+                                        : style::fg::light_black)
+            << " " << ptype.get_size()
+            << std::string((longest_size - ptype.get_size().length()), ' ')
             << " " << style::fg::dark_yellow << ptype.get_filegr()
             << std::string((longest_group - ptype.get_filegr().length()), ' ')
             << " " << ptype.get_filepw()
@@ -38,11 +43,11 @@ inline void handle_indivisual_entry(PType ptype, int longest_group,
             << ptype.get_color() << " " << ptype.get_filename() << std::endl;
 }
 
-template <typename T>
-requires IntoPath<T>
-inline void handle_multiple_entries(const T& p) {
+template <typename Path>
+requires IntoPath<Path>
+inline void handle_multiple_entries(const Path& p) {
   int longest_date = 0, longest_modified_str = 0, longest_group = 0,
-      longest_owner = 0;
+      longest_owner = 0, longest_size = 0;
   std::vector<PType> entry_ptypes{};
   for (const fs::directory_entry& entry : fs::directory_iterator(p)) {
     PType path(entry);
@@ -53,6 +58,8 @@ inline void handle_multiple_entries(const T& p) {
       longest_group = path.get_filegr().length();
     if (path.get_modified_time().length() > longest_date)
       longest_date = path.get_modified_time().length();
+    if (path.get_size().length() > longest_size)
+      longest_size = path.get_size().length();
 
     entry_ptypes.push_back(path);
   }
@@ -61,7 +68,8 @@ inline void handle_multiple_entries(const T& p) {
             [](auto f1, auto f2) { return f1 < f2; });
 
   for (const PType& p : entry_ptypes) {
-    handle_indivisual_entry(p, longest_group, longest_owner, longest_date);
+    handle_indivisual_entry(p, longest_size, longest_group, longest_owner,
+                            longest_date);
   }
 }
 
@@ -80,7 +88,8 @@ int main(const int argc, char* argv[]) {
 
     PType single_entry{fs::directory_entry{argv[i]}};
 
-    handle_indivisual_entry(single_entry, single_entry.get_filegr().length(),
+    handle_indivisual_entry(single_entry, single_entry.get_size().length(),
+                            single_entry.get_filegr().length(),
                             single_entry.get_filepw().length(),
                             single_entry.get_modified_time().length());
   }
