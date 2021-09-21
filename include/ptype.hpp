@@ -16,7 +16,7 @@ namespace fs = std::filesystem;
 std::string size_to_str(uintmax_t size);
 
 struct PType {
- private:
+private:
   std::string modified_time;
   char letter;
   std::string color;
@@ -28,7 +28,7 @@ struct PType {
   std::string size;
   bool is_dir;
 
- public:
+public:
   inline bool operator<(const PType& f2) {
     if (this->get_dir() && !f2.get_dir())
       return true;
@@ -84,51 +84,51 @@ struct PType {
     }
 
     switch (entry.status().type()) {
-      case fs::file_type::regular:
-        this->color = std::string{style::end};
-        this->letter = '.';
-        this->is_dir = false;
-        break;
-      case fs::file_type::directory:
-        this->color = std::string{style::fg::light_blue};
-        this->letter = 'd';
-        this->is_dir = true;
-        break;
-      case fs::file_type::symlink:
-        this->color = std::string{style::fg::light_magenta};
-        this->letter = 'l';
-        this->is_dir = false;
-        break;
-      case fs::file_type::block:
-        this->color = std::string{style::fg::light_green};
-        this->letter = 'b';
-        this->is_dir = false;
-        break;
-      case fs::file_type::character:
-        this->color = std::string{style::fg::light_yellow};
-        this->letter = 'c';
-        this->is_dir = false;
-        break;
-      case fs::file_type::fifo:
-        this->color = std::string{style::fg::light_yellow};
-        this->letter = '|';
-        this->is_dir = false;
-        break;
-      case fs::file_type::socket:
-        this->color = std::string{style::fg::light_red};
-        this->letter = 's';
-        this->is_dir = false;
-        break;
-      case fs::file_type::unknown:
-        this->color = std::string{style::end};
-        this->letter = '.';
-        this->is_dir = false;
-        break;
-      default:
-        this->color = std::string{style::end};
-        this->letter = '.';
-        this->is_dir = false;
-        break;
+    case fs::file_type::regular:
+      this->color = std::string{style::end};
+      this->letter = '.';
+      this->is_dir = false;
+      break;
+    case fs::file_type::directory:
+      this->color = std::string{style::fg::light_blue};
+      this->letter = 'd';
+      this->is_dir = true;
+      break;
+    case fs::file_type::symlink:
+      this->color = std::string{style::fg::light_magenta};
+      this->letter = 'l';
+      this->is_dir = false;
+      break;
+    case fs::file_type::block:
+      this->color = std::string{style::fg::light_green};
+      this->letter = 'b';
+      this->is_dir = false;
+      break;
+    case fs::file_type::character:
+      this->color = std::string{style::fg::light_yellow};
+      this->letter = 'c';
+      this->is_dir = false;
+      break;
+    case fs::file_type::fifo:
+      this->color = std::string{style::fg::light_yellow};
+      this->letter = '|';
+      this->is_dir = false;
+      break;
+    case fs::file_type::socket:
+      this->color = std::string{style::fg::light_red};
+      this->letter = 's';
+      this->is_dir = false;
+      break;
+    case fs::file_type::unknown:
+      this->color = std::string{style::end};
+      this->letter = '.';
+      this->is_dir = false;
+      break;
+    default:
+      this->color = std::string{style::end};
+      this->letter = '.';
+      this->is_dir = false;
+      break;
     }
 
     if (!this->is_dir) {
